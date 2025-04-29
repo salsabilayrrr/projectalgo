@@ -1,5 +1,5 @@
 #include <iostream>
-#include <fstream>
+
 using namespace std;
 
 struct TiketKereta {
@@ -15,3 +15,4 @@ struct TiketKereta {
 };
 
 TiketKereta* head = nullptr;
+
