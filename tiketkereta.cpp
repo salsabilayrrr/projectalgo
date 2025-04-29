@@ -15,3 +15,7 @@ struct TiketKereta {
 };
 
 TiketKereta* head = nullptr;
+
+int main(){
+    
+}
