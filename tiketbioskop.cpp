@@ -11,6 +11,7 @@ struct TiketBioskop {
     string tanggal;
     string jam;
     string harga;
+    string durasi;
     int jmltiket;
     int kursi;
     TiketBioskop* next;
