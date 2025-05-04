@@ -52,12 +52,78 @@ void berhenti() {
         berhenti();
     }
 }
+
+void tampilFilm(){
+    FILE *file = fopen("DataFilm.dat", "rb");
+    if (!file) {
+        cout << "\nTidak ada data film yang tersedia.\n";
+        return;
+    }
+
+    TiketBioskop film;
+
+    // Membaca data film dari file dan menambahkannya ke dalam linked list
+    while (fread(&film, sizeof(TiketBioskop), 1, file)){
+        // Membuat node baru untuk linked list
+        TiketBioskop* newNode = new TiketBioskop();
+        //Menggunakan Struck untuk membaca data (DataFilm) dalam film
+        newNode->id_tiket = film.id_tiket;
+        newNode->nama_pemesan = film.nama_pemesan;
+        newNode->namafilm = film.namafilm;
+        newNode->tanggal = film.tanggal;
+        newNode->jam = film.jam;
+        newNode->harga = film.harga;
+        newNode->durasi = film.durasi;
+        newNode->jmltiket = film.jmltiket;
+        newNode->kursi = film.kursi;
+
+        newNode->next = nullptr;
+
+        if (head == nullptr) {
+            head = newNode;  // Jika linked list kosong, node pertama menjadi head
+        } else {
+            TiketBioskop* bantu = head;
+            while (bantu->next != nullptr) {
+                bantu = bantu->next;
+            }
+            bantu->next = newNode;  
+        }
+    }
+
+    fclose(file);
+
+    // Menampilkan daftar film
+    if (head == nullptr) {
+        cout << "\nTidak ada data film yang tersedia.\n";
+        return;
+    }
+
+    cout << "\n========================================  " << endl;
+    cout << "|            Daftar Film               |" << endl;
+    cout << "========================================  " << endl;
+
+    TiketBioskop* bantu = head;         
+    while (bantu != nullptr) {
+        cout << "ID Tiket     : " << bantu->id_tiket << endl;
+        cout << "Nama Pemesan : " << bantu->nama_pemesan << endl;
+        cout << "Film         : " << bantu->namafilm << endl;
+        cout << "Tanggal      : " << bantu->tanggal << endl;
+        cout << "Jam          : " << bantu->jam << endl;
+        cout << "Harga        : " << bantu->harga << endl;
+        cout << "Durasi       : " << bantu->durasi << endl;
+        cout << "Jumlah Tiket : " << bantu->jmltiket << endl;
+        cout << "No Kursi     : " << bantu->kursi << endl;
+        cout << "------------------------------------" << endl;
+        bantu = bantu->next;
+    }
+}
+
 int main(){
     int pilihan;
     do {
         menu(pilihan);
         switch (pilihan) {
-            // case 1: ; break;
+            case 1: tampilFilm(); break;
             // case 2: ; break;
             // case 3: ; break;
             // case 4: ; break;
