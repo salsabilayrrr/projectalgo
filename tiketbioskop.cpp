@@ -19,25 +19,12 @@ struct TiketBioskop {
 
 TiketBioskop* head = nullptr;
 
-void menu(int pilihan){
-    cout << "\n================= Menu =================\n";
-    cout << "| 1. Tampilkan Daftar Film             |" << endl;
-    cout << "| 2. Cari Film                         |"<< endl;
-    cout << "| 3. Pesan Tiket                       |"<< endl;
-    cout << "| 4. Tampilkan Invoice                 |" << endl;
-    cout << "| 5. Batalkan Pemesanan                |"<< endl;
-    cout << "| 6. Exit                              |"<< endl;
-    cout << "========================================" << endl;
-    cout << "Pilih Menu[1-6]: ";
-    cin >> pilihan;
-    cin.ignore(); 
-}
-
 void opsilain() {
     cout << "========================================  " << endl;
     cout << "  Pilihan tidak Valid, silakan coba lagi  " << endl;
     cout << "========================================  " << endl;
 }
+
 void berhenti() {
     char pilihan;
     cout << "Apakah Anda Ingin Kembali ke Menu Awal? (y/n): ";
@@ -53,8 +40,23 @@ void berhenti() {
     }
 }
 
+void menu(int &pilihan){
+        cout << "\n================= Menu =================\n";
+        cout << "| 1. Tampilkan Daftar Film             |" << endl;
+        cout << "| 2. Cari Film                         |"<< endl;
+        cout << "| 3. Pesan Tiket                       |"<< endl;
+        cout << "| 4. Tampilkan Invoice                 |" << endl;
+        cout << "| 5. Batalkan Pemesanan                |"<< endl;
+        cout << "| 6. Exit                              |"<< endl;
+        cout << "========================================" << endl;
+        cout << "Pilih Menu[1-6]: ";
+        cin >> pilihan;
+        cin.ignore();
+}
+
+
 void tampilFilm(){
-    FILE *file = fopen("DataFilm.dat", "rb");
+    FILE *file = fopen("DataFilm.txt", "rb");
     if (!file) {
         cout << "\nTidak ada data film yang tersedia.\n";
         return;
@@ -139,5 +141,4 @@ int main(){
         berhenti();
     } while (pilihan != 6);
     return 0;
-    
 }
