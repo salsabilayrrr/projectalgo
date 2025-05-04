@@ -5,13 +5,13 @@
 using namespace std;
 
 struct TiketBioskop {
-    string id_tiket;
-    string nama_pemesan;
-    string namafilm;
-    string tanggal;
-    string jam;
-    string harga;
-    string durasi;
+    char id_tiket[10];
+    char nama_pemesan[50];
+    char namafilm[100];
+    char tanggal[10];
+    char jam[10];
+    char harga[20];
+    char durasi[20];
     int jmltiket;
     int kursi;
     TiketBioskop* next;
@@ -54,9 +54,8 @@ void menu(int &pilihan){
         cin.ignore();
 }
 
-
-void tampilFilm(){
-    FILE *file = fopen("DataFilm.txt", "rb");
+void tampilFilm() {
+    FILE* file = fopen("DataFilm.dat", "rb");
     if (!file) {
         cout << "\nTidak ada data film yang tersedia.\n";
         return;
@@ -64,61 +63,26 @@ void tampilFilm(){
 
     TiketBioskop film;
 
-    // Membaca data film dari file dan menambahkannya ke dalam linked list
-    while (fread(&film, sizeof(TiketBioskop), 1, file)){
-        // Membuat node baru untuk linked list
-        TiketBioskop* newNode = new TiketBioskop();
-        //Menggunakan Struck untuk membaca data (DataFilm) dalam film
-        newNode->id_tiket = film.id_tiket;
-        newNode->nama_pemesan = film.nama_pemesan;
-        newNode->namafilm = film.namafilm;
-        newNode->tanggal = film.tanggal;
-        newNode->jam = film.jam;
-        newNode->harga = film.harga;
-        newNode->durasi = film.durasi;
-        newNode->jmltiket = film.jmltiket;
-        newNode->kursi = film.kursi;
-
-        newNode->next = nullptr;
-
-        if (head == nullptr) {
-            head = newNode;  // Jika linked list kosong, node pertama menjadi head
-        } else {
-            TiketBioskop* bantu = head;
-            while (bantu->next != nullptr) {
-                bantu = bantu->next;
-            }
-            bantu->next = newNode;  
-        }
-    }
-
-    fclose(file);
-
-    // Menampilkan daftar film
-    if (head == nullptr) {
-        cout << "\nTidak ada data film yang tersedia.\n";
-        return;
-    }
-
     cout << "\n========================================  " << endl;
     cout << "|            Daftar Film               |" << endl;
     cout << "========================================  " << endl;
 
-    TiketBioskop* bantu = head;         
-    while (bantu != nullptr) {
-        cout << "ID Tiket     : " << bantu->id_tiket << endl;
-        cout << "Nama Pemesan : " << bantu->nama_pemesan << endl;
-        cout << "Film         : " << bantu->namafilm << endl;
-        cout << "Tanggal      : " << bantu->tanggal << endl;
-        cout << "Jam          : " << bantu->jam << endl;
-        cout << "Harga        : " << bantu->harga << endl;
-        cout << "Durasi       : " << bantu->durasi << endl;
-        cout << "Jumlah Tiket : " << bantu->jmltiket << endl;
-        cout << "No Kursi     : " << bantu->kursi << endl;
-        cout << "------------------------------------" << endl;
-        bantu = bantu->next;
+    while (fread(&film, sizeof(TiketBioskop) - sizeof(TiketBioskop*), 1, file)) {
+        cout << "ID Tiket     : " << film.id_tiket << endl;
+        cout << "Nama Pemesan : " << film.nama_pemesan << endl;
+        cout << "Film         : " << film.namafilm << endl;
+        cout << "Tanggal      : " << film.tanggal << endl;
+        cout << "Jam          : " << film.jam << endl;
+        cout << "Harga        : " << film.harga << endl;
+        cout << "Durasi       : " << film.durasi << endl;
+        cout << "Jumlah Tiket : " << film.jmltiket << endl;
+        cout << "No Kursi     : " << film.kursi << endl;
+        cout << "----------------------------------------" << endl;
     }
+
+    fclose(file);
 }
+
 
 int main(){
     int pilihan;

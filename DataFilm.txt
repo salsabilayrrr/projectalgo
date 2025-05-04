@@ -1,5 +1,0 @@
-A001|Jumbo|2025-05-05|15.00|1 jam 42 menit|10|5
-A002|Pengepungan di Bukit Duri|2025-04-25|19.00|1 jam 58 menit|15|3
-A003|Avengers: Endgame|2025-06-01|20.30|2 jam 30 menit|20|8
-A004|Guardians of the Galaxy|2025-05-15|16.00|2 jam 10 menit|12|4
-A005|Spider-Man: No Way Home|2025-07-10|18.45|2 jam 15 menit|8|2
