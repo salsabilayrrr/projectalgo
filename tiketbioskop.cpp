@@ -2,6 +2,7 @@
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iomanip>
 using namespace std;
 
 struct TiketBioskop {
@@ -36,6 +37,17 @@ void berhenti() {
     }
 }
 
+void login(){
+    string username,password;
+    cout << setw(51) << setfill ('=' )<< endl;
+    cout << "\n||" << setw(40) << setfill (' ') << "  Selamat Datang di Pemesanan Tiket Bioskop" << setw(3) << setfill (' ') << "||";
+    cout << setw(70) << setfill ('=' )<< endl;
+
+    cout << "\nMasukkan username  = "; cin >> username;
+    cout << "Masukkan password  = "; cin >> password;
+    cout << "\n----------Selamat Anda Berhasil Login------------\n";
+
+}
 void menu(int &pilihan){
         cout << "\n================= Menu =================\n";
         cout << "| 1. Tampilkan Daftar Film             |" << endl;
@@ -75,10 +87,10 @@ void tampilFilm() {
     fclose(file);
 }
 
-
 int main(){
     int pilihan;
     do {
+        login();
         menu(pilihan);
         switch (pilihan) {
             case 1: tampilFilm(); break;
