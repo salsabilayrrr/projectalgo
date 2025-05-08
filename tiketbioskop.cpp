@@ -8,7 +8,7 @@ using namespace std;
 struct TiketBioskop {
     char id_tiket[10];
     char namafilm[100];
-    char tanggal[10];
+    char tanggal[20];
     char jam[10];
     char harga[20];
     char durasi[20];
@@ -62,6 +62,48 @@ void menu(int &pilihan){
         cin.ignore();
 }
 
+void isiDataAwal() {
+    FILE* file = fopen("DataFilm.dat", "wb"); // overwrite semua
+    if (!file) {
+        cout << "Gagal membuat file data.\n";
+        return;
+    }
+
+    TiketBioskop data[] = {
+        {"001", "Avengers", "2025-11-12", "17:00", "50000", "2 jam"},
+        {"002", "Spider-Man", "2025-11-13", "19:00", "45000", "2.5 jam"},
+        {"003", "Batman", "2025-11-14", "20:30", "55000", "2.5 jam"}
+    };
+
+    for (int i = 0; i < 3; i++) {
+        fwrite(&data[i], sizeof(TiketBioskop), 1, file);
+    }
+
+    fclose(file);
+}
+
+void quickSort(TiketBioskop arr[], int low, int high) {
+    if (low < high) {
+        int pivot = low;
+        int i = low, j = high;
+        TiketBioskop temp;
+        while (i < j) {
+            while (arr[i].namafilm[0] <= arr[pivot].namafilm[0] && i < high) i++;
+            while (arr[j].namafilm[0] > arr[pivot].namafilm[0]) j--;
+            if (i < j) {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        temp = arr[pivot];
+        arr[pivot] = arr[j];
+        arr[j] = temp;
+        quickSort(arr, low, j - 1);
+        quickSort(arr, j + 1, high);
+    }
+}
+
 void tampilFilm() {
     FILE* file = fopen("DataFilm.dat", "rb");
     if (!file) {
@@ -69,28 +111,42 @@ void tampilFilm() {
         return;
     }
 
-    TiketBioskop film;
+    TiketBioskop film[100];
+    int jmlfilm = 0;
+
+    while (fread(&film[jmlfilm], sizeof(TiketBioskop), 1, file)){
+        jmlfilm ++;
+    }
+    fclose(file);
+
+    if (jmlfilm == 0) {
+        cout << "---Tidak ada Film yang terdaftar---\n\n";
+        return;
+    }
+
+    quickSort(film, 0, jmlfilm -1);
 
     cout << "\n========================================  " << endl;
     cout << "|            Daftar Film               |" << endl;
     cout << "========================================  " << endl;
 
-    while (fread(&film, sizeof(TiketBioskop), 1, file)) {
-        cout << "ID Tiket     : " << film.id_tiket << endl;
-        cout << "Film         : " << film.namafilm << endl;
-        cout << "Tanggal      : " << film.tanggal << endl;
-        cout << "Jam          : " << film.jam << endl;
-        cout << "Harga        : " << film.harga << endl;
-        cout << "Durasi       : " << film.durasi << endl;
+    for (int i = 0; i < jmlfilm; i++) {
+        cout << "ID Tiket     : " << film[i].id_tiket << endl;
+        cout << "Film         : " << film[i].namafilm << endl;
+        cout << "Tanggal      : " << film[i].tanggal << endl;
+        cout << "Jam          : " << film[i].jam << endl;
+        cout << "Harga        : " << film[i].harga << endl;
+        cout << "Durasi       : " << film[i].durasi << endl;
         cout << "----------------------------------------" << endl;
     }
-    fclose(file);
+
 }
 
 int main(){
     int pilihan;
+    isiDataAwal();
+    login();
     do {
-        login();
         menu(pilihan);
         switch (pilihan) {
             case 1: tampilFilm(); break;
