@@ -6,15 +6,11 @@ using namespace std;
 
 struct TiketBioskop {
     char id_tiket[10];
-    char nama_pemesan[50];
     char namafilm[100];
     char tanggal[10];
     char jam[10];
     char harga[20];
     char durasi[20];
-    int jmltiket;
-    int kursi;
-    TiketBioskop* next;
 };
 
 TiketBioskop* head = nullptr;
@@ -67,19 +63,15 @@ void tampilFilm() {
     cout << "|            Daftar Film               |" << endl;
     cout << "========================================  " << endl;
 
-    while (fread(&film, sizeof(TiketBioskop) - sizeof(TiketBioskop*), 1, file)) {
+    while (fread(&film, sizeof(TiketBioskop), 1, file)) {
         cout << "ID Tiket     : " << film.id_tiket << endl;
-        cout << "Nama Pemesan : " << film.nama_pemesan << endl;
         cout << "Film         : " << film.namafilm << endl;
         cout << "Tanggal      : " << film.tanggal << endl;
         cout << "Jam          : " << film.jam << endl;
         cout << "Harga        : " << film.harga << endl;
         cout << "Durasi       : " << film.durasi << endl;
-        cout << "Jumlah Tiket : " << film.jmltiket << endl;
-        cout << "No Kursi     : " << film.kursi << endl;
         cout << "----------------------------------------" << endl;
     }
-
     fclose(file);
 }
 
