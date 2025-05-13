@@ -139,7 +139,68 @@ void tampilFilm() {
         cout << "Durasi       : " << film[i].durasi << endl;
         cout << "----------------------------------------" << endl;
     }
+}
 
+int binarySearch(TiketBioskop arr[], int left, int right, const char namafilm[]) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int cmp = 0, i = 0;
+        while (arr[mid].namafilm[i] != '\0' && namafilm[i] != '\0' && arr[mid].namafilm[i] == namafilm[i]) {
+            i++;
+        }
+        cmp = arr[mid].namafilm[i] - namafilm[i];
+        
+        if (cmp == 0) return mid;
+        if (cmp < 0) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+
+void cariFilm(){
+    FILE* file = fopen("DataFilm.dat", "rb");
+    if (!file) {
+        cout << "\nTidak ada data film yang tersedia.\n";
+        return;
+    }
+
+    TiketBioskop film[100];
+    int jmlfilm = 0;
+
+    while (fread(&film[jmlfilm], sizeof(TiketBioskop), 1, file)){
+        jmlfilm ++;
+    }
+    fclose(file);
+
+    if (jmlfilm == 0) {
+        cout << "---Tidak ada Film yang dicari---\n\n";
+        return;
+    }
+
+    quickSort(film, 0, jmlfilm -1);
+
+    char filmCari[100];
+    cout << "\nMasukkan Judul Film yang dicari: ";
+    cin.getline(filmCari,100);
+
+    int i = binarySearch(film, 0, jmlfilm - 1, filmCari);
+
+    if (i != -1) {
+        // Menampilkan data mahasiswa jika ditemukan
+        cout << "\n========================================  " << endl;
+        cout << "|    Pencarian Berdasarkan Judul Film   |" << endl;
+        cout << "========================================  " << endl;
+        cout << "\n----------- FILM Ditemukan -----------\n";
+        cout << "ID Tiket     : " << film[i].id_tiket << endl;
+        cout << "Film         : " << film[i].namafilm << endl;
+        cout << "Tanggal      : " << film[i].tanggal << endl;
+        cout << "Jam          : " << film[i].jam << endl;
+        cout << "Harga        : " << film[i].harga << endl;
+        cout << "Durasi       : " << film[i].durasi << endl;
+        cout << "----------------------------------------" << endl;
+    } else {
+        cout << "Film dengan judul " << filmCari << " tidak ditemukan!\n";
+    }
 }
 
 int main(){
@@ -150,6 +211,7 @@ int main(){
         menu(pilihan);
         switch (pilihan) {
             case 1: tampilFilm(); break;
+            case 2: cariFilm(); break;
             // case 2: ; break;
             // case 3: ; break;
             // case 4: ; break;
