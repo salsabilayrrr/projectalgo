@@ -14,7 +14,21 @@ struct TiketBioskop {
     char durasi[20];
 };
 
+struct Kursi {
+    string nomor;
+    bool terisi;
+    Kursi* next;
+};
+
+struct Pesanan {
+    TiketBioskop data;
+    string no_kursi;
+    Pesanan* next;
+};
+
 TiketBioskop* head = nullptr;
+Kursi* headKursi = nullptr;
+Pesanan* headPesanan = nullptr;
 
 void opsilain() {
     cout << "========================================  " << endl;
@@ -203,16 +217,124 @@ void cariFilm(){
     }
 }
 
+void posisiKursi() {
+    char baris[] = {'A', 'B', 'C'};
+    int kolom = 5;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 1; j <= kolom; j++) {
+            Kursi* baru = new Kursi;
+            baru->nomor = string(1, baris[i]) + to_string(j);            
+            baru->terisi = false;
+            baru->next = nullptr;
+
+            if (headKursi == nullptr) {
+                headKursi = baru;
+            } else {
+                Kursi* temp = headKursi;
+                while (temp->next != nullptr) temp = temp->next;
+                temp->next = baru;
+            }
+        }
+    }
+}
+
+void tampilkanKursi() {
+    cout << "\nDaftar Kursi: \n";
+    Kursi* temp = headKursi;
+    int count = 0;
+    while (temp != nullptr) {
+        if (temp->terisi) {
+            cout << "[XX] ";
+        } else {
+            cout << "[" << temp->nomor << "] ";
+        }
+        count++;
+        if (count % 5 == 0) cout << endl;
+        temp = temp->next;
+    }
+}
+
+string pilihKursi() {
+    string input;
+    tampilkanKursi();
+    cout << "\nPilih nomor kursi yang ingin dipesan: ";
+    cin >> input;
+
+    Kursi* temp = headKursi;
+    while (temp != nullptr) {
+        if (temp->nomor == input) {
+            if (!temp->terisi) {
+                temp->terisi = true;
+                cout << "Kursi " << input << " berhasil dipesan.\n";
+                return input;
+            } else {
+                cout << "Kursi sudah terisi, pilih yang lain!\n";
+                return pilihKursi();
+            }
+        }
+        temp = temp->next;
+    }
+
+    cout << "Nomor kursi tidak valid!\n";
+    return pilihKursi();
+}
+
+void tambahPesanan(TiketBioskop tiket) {
+    Pesanan* baru = new Pesanan;
+    baru->data = tiket;
+    baru->no_kursi = pilihKursi();
+    baru->next = nullptr;
+
+    if (headPesanan == nullptr) {
+        headPesanan = baru;
+    } else {
+        Pesanan* temp = headPesanan;
+        while (temp->next != nullptr) temp = temp->next;
+        temp->next = baru;
+    }
+    cout << "\nTiket berhasil dipesan!\n";
+}
+
+void pesanTiket() {
+    FILE* file = fopen("DataFilm.dat", "rb");
+    if (!file) {
+        cout << "Tidak ada data film yang tersedia.\n";
+        return;
+    }
+
+    TiketBioskop film[100];
+    int jmlfilm = 0;
+
+    while (fread(&film[jmlfilm], sizeof(TiketBioskop), 1, file)) jmlfilm++;
+    fclose(file);
+
+    cout << "\nDaftar Film:\n";
+    for (int i = 0; i < jmlfilm; i++) {
+        cout << i + 1 << ". " << film[i].namafilm << endl;
+    }
+
+    int pilih;
+    cout << "Pilih film (1-" << jmlfilm << "): ";
+    cin >> pilih;
+    if (pilih >= 1 && pilih <= jmlfilm) {
+        tambahPesanan(film[pilih - 1]);
+    } else {
+        cout << "Pilihan tidak valid.\n";
+    }
+}
+
 int main(){
     int pilihan;
     isiDataAwal();
+    posisiKursi();
     login();
     do {
         menu(pilihan);
         switch (pilihan) {
             case 1: tampilFilm(); break;
             case 2: cariFilm(); break;
-            // case 2: ; break;
+            case 3: pesanTiket(); break;
             // case 3: ; break;
             // case 4: ; break;
             // case 5: ; break;
