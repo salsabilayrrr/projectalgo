@@ -86,10 +86,12 @@ void isiDataAwal() {
     TiketBioskop data[] = {
         {"001", "Avengers", "2025-11-12", "17:00", "50000", "2 jam"},
         {"002", "Spider-Man", "2025-11-13", "19:00", "45000", "2.5 jam"},
-        {"003", "Batman", "2025-11-14", "20:30", "55000", "2.5 jam"}
+        {"003", "Batman", "2025-11-14", "20:30", "55000", "2.5 jam"},
+        {"004", "Transformers", "2025-11-15", "21:45", "60000", "2.5 jam"},
+        {"005", "Jumbo", "2025-11-16", "18:45", "65000", "2.3 jam"}
     };
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
         fwrite(&data[i], sizeof(TiketBioskop), 1, file);
     }
 
@@ -200,7 +202,7 @@ void cariFilm(){
     int i = binarySearch(film, 0, jmlfilm - 1, filmCari);
 
     if (i != -1) {
-        // Menampilkan data mahasiswa jika ditemukan
+        // Menampilkan data Film jika ditemukan
         cout << "\n========================================  " << endl;
         cout << "|    Pencarian Berdasarkan Judul Film   |" << endl;
         cout << "========================================  " << endl;
@@ -324,6 +326,33 @@ void pesanTiket() {
     }
 }
 
+void tampilkanInvoice() {
+    if (headPesanan == nullptr) {
+        cout << "\nBelum ada pesanan yang dilakukan.\n";
+        return;
+    }
+
+    Pesanan* temp = headPesanan;  // Mulai dari pesanan pertama
+    int nomorPesanan = 1;         // Untuk memberi nomor pada invoice
+
+    cout << "\n=========== INVOICE PESANAN ===========\n";
+    while (temp != nullptr) {
+        cout << "Pesanan #" << nomorPesanan++ << endl;
+        cout << "----------------------------------------\n";
+        cout << "ID Tiket     : " << temp->data.id_tiket << endl;
+        cout << "Judul Film   : " << temp->data.namafilm << endl;
+        cout << "Tanggal      : " << temp->data.tanggal << endl;
+        cout << "Jam Tayang   : " << temp->data.jam << endl;
+        cout << "Harga Tiket  : Rp " << temp->data.harga << endl;
+        cout << "Durasi Film  : " << temp->data.durasi << endl;
+        cout << "No Kursi     : " << temp->no_kursi << endl;
+        cout << "----------------------------------------\n\n";
+
+        // Lanjut ke pesanan berikutnya
+        temp = temp->next;
+    }
+}
+
 int main(){
     int pilihan;
     isiDataAwal();
@@ -335,8 +364,8 @@ int main(){
             case 1: tampilFilm(); break;
             case 2: cariFilm(); break;
             case 3: pesanTiket(); break;
-            // case 3: ; break;
-            // case 4: ; break;
+            case 4: tampilkanInvoice(); break;
+            
             // case 5: ; break;
             case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
