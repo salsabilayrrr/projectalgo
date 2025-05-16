@@ -365,7 +365,6 @@ int main(){
             case 2: cariFilm(); break;
             case 3: pesanTiket(); break;
             case 4: tampilkanInvoice(); break;
-            
             // case 5: ; break;
             case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
