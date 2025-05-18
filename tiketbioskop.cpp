@@ -32,7 +32,7 @@ Pesanan* headPesanan = nullptr;
 
 void opsilain() {
     cout << "========================================  " << endl;
-    cout << "  Pilihan tidak Valid, silakan coba lagi  " << endl;
+    cout << " Pilihan tidak valid, silakan coba lagi  " << endl;
     cout << "========================================  " << endl;
 }
 
@@ -353,9 +353,48 @@ void tampilkanInvoice() {
     }
 }
 
-void batalPesan(){
-    
-}
+// void batalPesan(){
+//     if (headPesanan == nullptr) {
+//         cout << "\nBelum ada pesanan untuk dibatalkan.\n";
+//         return;
+//     }
+
+//     string id, kursi;
+//     cout << "\nMasukkan ID Tiket yang ingin dibatalkan: ";
+//     cin >> id;
+//     cout << "Masukkan No Kursi yang ingin dibatalkan: ";
+//     cin >> kursi;
+
+//     Pesanan* temp = headPesanan;
+//     Pesanan* bantu = nullptr;
+
+//     while (temp != nullptr) {
+//         if (temp->data.id_tiket == id && temp->no_kursi == kursi) {
+//             // Bebaskan kursi
+//             Kursi* k = headKursi;
+//             while (k != nullptr) {
+//                 if (k->nomor == kursi) {
+//                     k->terisi = false;
+//                     break;
+//                 }
+//                 k = k->next;
+//             }
+
+//             // Hapus node pesanan
+//             if (bantu == nullptr) {
+//                 headPesanan = temp->next;
+//             } else {
+//                 bantu->next = temp->next;
+//             }
+//             delete temp;
+//             cout << "Pesanan berhasil dibatalkan!\n";
+//             return;
+//         }
+//         bantu = temp;
+//         temp = temp->next;
+//     }
+//     cout << "Pesanan tidak ditemukan. Pastikan ID Tiket dan No Kursi benar.\n";
+// }
 
 int main(){
     system("cls");
@@ -371,7 +410,7 @@ int main(){
             case 2: cariFilm(); break;
             case 3: pesanTiket(); break;
             case 4: tampilkanInvoice(); break;
-            case 5: batalPesan(); break;
+            //case 5: batalPesan(); break;
             case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
                     cout <<"Selamat Menonton!\n";
