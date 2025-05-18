@@ -353,19 +353,25 @@ void tampilkanInvoice() {
     }
 }
 
+void batalPesan(){
+    
+}
+
 int main(){
+    system("cls");
     int pilihan;
     isiDataAwal();
     posisiKursi();
     login();
     do {
         menu(pilihan);
+        system("cls");
         switch (pilihan) {
             case 1: tampilFilm(); break;
             case 2: cariFilm(); break;
             case 3: pesanTiket(); break;
             case 4: tampilkanInvoice(); break;
-            // case 5: ; break;
+            case 5: batalPesan(); break;
             case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
                     cout <<"Selamat Menonton!\n";
