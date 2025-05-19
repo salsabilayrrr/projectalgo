@@ -6,8 +6,8 @@
 using namespace std;
 
 struct User {
-    string username;
-    string password;
+    char username[50];
+    char password[50];
 };
 
 struct TiketBioskop {
@@ -63,13 +63,16 @@ void berhenti() {
 }
 
 void login() {
-    string username, password;
-    cout << setw(51) << setfill ('=' )<< endl;
-    cout << "\n||" << setw(40) << setfill (' ') << "  Selamat Datang di Pemesanan Tiket Bioskop" << setw(3) << setfill (' ') << "||";
-    cout << setw(70) << setfill ('=' )<< endl;
+    char username[50], password[50]; // array char untuk menyimpan input user
 
-    cout << "\nMasukkan username  = "; cin >> username;
-    cout << "Masukkan password  = "; cin >> password;
+    cout << setw(48) << setfill('=') << "" << endl;
+    cout << "||" << setw(40) << setfill(' ') << "  Selamat Datang di Pemesanan Tiket Bioskop" << setw(3) << setfill(' ') << "||"<< endl;
+    cout << setw(48) << setfill('=') << "" << endl;
+
+    cout << "\nMasukkan username  = "; 
+    cin >> username;
+    cout << "Masukkan password  = "; 
+    cin >> password;
 
     FILE* file = fopen("DataUser.dat", "rb");
     if (!file) {
@@ -81,7 +84,8 @@ void login() {
     bool ditemukan = false;
 
     while (fread(&userData, sizeof(User), 1, file)) {
-        if (username == userData.username && password == userData.password) {
+        // Gunakan strcmp untuk bandingkan string C-style
+        if (strcmp(username, userData.username) == 0 && strcmp(password, userData.password) == 0) {
             ditemukan = true;
             break;
         }
@@ -91,9 +95,9 @@ void login() {
 
     if (ditemukan) {
         cout << "\n----------Selamat Anda Berhasil Login------------\n";
-        usernameAktif = username;
+        usernameAktif = string(username); // simpan username aktif
 
-        string DataUser = "pesanan_" + username + ".dat";
+        string DataUser = "pesanan_" + usernameAktif + ".dat";
         FILE* fileCheck = fopen(DataUser.c_str(), "ab"); // buat file pesanan jika belum ada
         if (!fileCheck) {
             cout << "Gagal membuat file pesanan.\n";
@@ -136,15 +140,14 @@ void simpanUserBaru(string username, string password) {
 
 void menu(int &pilihan){
         cout << "\n================= Menu =================\n";
-        cout << "| 1. Login                             |" << endl;
-        cout << "| 2. Tampilkan Daftar Film             |" << endl;
-        cout << "| 3. Cari Film                         |"<< endl;
-        cout << "| 4. Pesan Tiket                       |"<< endl;
-        cout << "| 5. Tampilkan Invoice                 |" << endl;
-        cout << "| 6. Batalkan Pemesanan                |"<< endl;
-        cout << "| 7. Exit                              |"<< endl;
+        cout << "| 1. Tampilkan Daftar Film             |" << endl;
+        cout << "| 2. Cari Film                         |"<< endl;
+        cout << "| 3. Pesan Tiket                       |"<< endl;
+        cout << "| 4. Tampilkan Invoice                 |" << endl;
+        cout << "| 5. Batalkan Pemesanan                |"<< endl;
+        cout << "| 6. Exit                              |"<< endl;
         cout << "========================================" << endl;
-        cout << "Pilih Menu[1-7]: ";
+        cout << "Pilih Menu[1-6]: ";
         cin >> pilihan;
         cin.ignore();
 }
@@ -544,18 +547,18 @@ int main(){
     isiDataAwal();
     posisiKursi();
     int pilihan;
+    login();
     
     do {
         menu(pilihan);
         system("cls");
         switch (pilihan) {
-            case 1: login(); break;
-            case 2: tampilFilm(); break;
-            case 3: cariFilm(); break;
-            case 4: pesanTiket(); break;
-            case 5: tampilkanInvoice(); break;
-            case 6: batalPesan(); break;
-            case 7: 
+            case 1: tampilFilm(); break;
+            case 2: cariFilm(); break;
+            case 3: pesanTiket(); break;
+            case 4: tampilkanInvoice(); break;
+            case 5: batalPesan(); break;
+            case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
                     cout <<"Selamat Menonton!\n";
                     break;
@@ -564,6 +567,6 @@ int main(){
                     berhenti();
         }
         berhenti();
-    } while (pilihan != 7);
+    } while (pilihan != 6);
     return 0;
 }
