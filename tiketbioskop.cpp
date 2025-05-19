@@ -284,18 +284,33 @@ string pilihKursi() {
 
 void tambahPesanan(TiketBioskop tiket) {
     Pesanan* baru = new Pesanan;
-    baru->data = tiket;
-    baru->no_kursi = pilihKursi();
-    baru->next = nullptr;
+    FILE* file = fopen("DataPesanan.dat", "ab");
+    if (!file) {
+        cout << "Gagal membuka file.\n";
+        return;
+    }
 
+    int jml;
+    cout << "Berapa tiket yang ingin dipesan? ";
+    cin >> jml;
+
+    for (int i = 0; i < jml; i++)
+    {
+        baru->data = tiket;
+        baru->no_kursi = pilihKursi();
+        baru->next = nullptr;
     if (headPesanan == nullptr) {
         headPesanan = baru;
     } else {
         Pesanan* temp = headPesanan;
-        while (temp->next != nullptr) temp = temp->next;
+        while (temp->next != nullptr){
+            temp = temp->next;
+        }
         temp->next = baru;
     }
     cout << "\nTiket berhasil dipesan!\n";
+    }
+    fclose(file);
 }
 
 void pesanTiket() {
@@ -327,6 +342,20 @@ void pesanTiket() {
 }
 
 void tampilkanInvoice() {
+    FILE* file = fopen("DataPesanan.dat", "rb");
+    if (!file) {
+        cout << "Gagal membuka file.\n";
+        return;
+    }
+
+    Pesanan tiket[100];
+    int jmltiket = 0;
+    while (fread(&tiket[jmltiket], sizeof(Pesanan), 1, file))
+    {
+        jmltiket++;
+    }
+    fclose(file);
+
     if (headPesanan == nullptr) {
         cout << "\nBelum ada pesanan yang dilakukan.\n";
         return;
