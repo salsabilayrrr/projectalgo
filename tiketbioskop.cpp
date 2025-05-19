@@ -2,6 +2,7 @@
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdio>
 #include <iomanip>
 using namespace std;
 
@@ -31,7 +32,7 @@ struct DataPesananFile {
     char no_kursi[10]; // cukup buat kursi seperti "A1", "C5"
 };
 
-
+string usernameAktif;
 TiketBioskop* head = nullptr;
 Kursi* headKursi = nullptr;
 Pesanan* headPesanan = nullptr;
@@ -58,7 +59,7 @@ void berhenti() {
 }
 
 void login(){
-    string username,password;
+    string username, password;
     cout << setw(51) << setfill ('=' )<< endl;
     cout << "\n||" << setw(40) << setfill (' ') << "  Selamat Datang di Pemesanan Tiket Bioskop" << setw(3) << setfill (' ') << "||";
     cout << setw(70) << setfill ('=' )<< endl;
@@ -66,8 +67,22 @@ void login(){
     cout << "\nMasukkan username  = "; cin >> username;
     cout << "Masukkan password  = "; cin >> password;
     cout << "\n----------Selamat Anda Berhasil Login------------\n";
+    
+    //belum selesaii iniii
+    usernameAktif = username;
 
+    string DataUser = "pesanan_" + username + ".dat";
+    FILE* file = fopen("DataUser.dat", "rb");
+    if (!file) {
+        file = fopen("DataUser.dat", "wb"); // buat file kosong
+        if (!file) {
+            cout << "Gagal membuat file pesanan.\n";
+            return;
+        }
+    }
+    fclose(file);
 }
+
 void menu(int &pilihan){
         cout << "\n================= Menu =================\n";
         cout << "| 1. Tampilkan Daftar Film             |" << endl;
@@ -289,7 +304,7 @@ string pilihKursi() {
 }
 
 void tambahPesanan(TiketBioskop tiket) {
-    Pesanan* baru = new Pesanan;
+    
     FILE* file = fopen("DataPesanan.dat", "ab");
     if (!file) {
         cout << "Gagal membuka file.\n";
@@ -300,14 +315,14 @@ void tambahPesanan(TiketBioskop tiket) {
     cout << "Berapa tiket yang ingin dipesan? ";
     cin >> jml;
 
-    for (int i = 0; i < jml; i++)
-    {
+    for (int i = 0; i < jml; i++){
+        Pesanan* baru = new Pesanan;
         baru->data = tiket;
         baru->no_kursi = pilihKursi();
         baru->next = nullptr;
-    if (headPesanan == nullptr) {
-        headPesanan = baru;
-    } else {
+        if (headPesanan == nullptr) {
+            headPesanan = baru;
+        } else {
         Pesanan* temp = headPesanan;
         while (temp->next != nullptr){
             temp = temp->next;
@@ -347,46 +362,46 @@ void pesanTiket() {
     }
 }
 
-// void tampilkanInvoice() {
-//     FILE* file = fopen("DataPesanan.dat", "rb");
-//     if (!file) {
-//         cout << "Gagal membuka file.\n";
-//         return;
-//     }
+void tampilkanInvoice() {
+    FILE* file = fopen("DataPesanan.dat", "rb");
+    if (!file) {
+        cout << "Gagal membuka file.\n";
+        return;
+    }
 
-//     Pesanan tiket[100];
-//     int jmltiket = 0;
-//     while (fread(&tiket[jmltiket], sizeof(Pesanan), 1, file))
-//     {
-//         jmltiket++;
-//     }
-//     fclose(file);
+    Pesanan tiket[100];
+    int jmltiket = 0;
+    while (fread(&tiket[jmltiket], sizeof(Pesanan), 1, file))
+    {
+        jmltiket++;
+    }
+    fclose(file);
 
-//     if (headPesanan == nullptr) {
-//         cout << "\nBelum ada pesanan yang dilakukan.\n";
-//         return;
-//     }
+    if (headPesanan == nullptr) {
+        cout << "\nBelum ada pesanan yang dilakukan.\n";
+        return;
+    }
 
-//     Pesanan* temp = headPesanan;  // Mulai dari pesanan pertama
-//     int nomorPesanan = 1;         // Untuk memberi nomor pada invoice
+    Pesanan* temp = headPesanan;  // Mulai dari pesanan pertama
+    int nomorPesanan = 1;         // Untuk memberi nomor pada invoice
 
-//     cout << "\n=========== INVOICE PESANAN ===========\n";
-//     while (temp != nullptr) {
-//         cout << "Pesanan #" << nomorPesanan++ << endl;
-//         cout << "----------------------------------------\n";
-//         cout << "ID Tiket     : " << temp->data.id_tiket << endl;
-//         cout << "Judul Film   : " << temp->data.namafilm << endl;
-//         cout << "Tanggal      : " << temp->data.tanggal << endl;
-//         cout << "Jam Tayang   : " << temp->data.jam << endl;
-//         cout << "Harga Tiket  : Rp " << temp->data.harga << endl;
-//         cout << "Durasi Film  : " << temp->data.durasi << endl;
-//         cout << "No Kursi     : " << temp->no_kursi << endl;
-//         cout << "----------------------------------------\n\n";
+    cout << "\n=========== INVOICE PESANAN ===========\n";
+    while (temp != nullptr) {
+        cout << "Pesanan #" << nomorPesanan++ << endl;
+        cout << "----------------------------------------\n";
+        cout << "ID Tiket     : " << temp->data.id_tiket << endl;
+        cout << "Judul Film   : " << temp->data.namafilm << endl;
+        cout << "Tanggal      : " << temp->data.tanggal << endl;
+        cout << "Jam Tayang   : " << temp->data.jam << endl;
+        cout << "Harga Tiket  : Rp " << temp->data.harga << endl;
+        cout << "Durasi Film  : " << temp->data.durasi << endl;
+        cout << "No Kursi     : " << temp->no_kursi << endl;
+        cout << "----------------------------------------\n\n";
 
-//         // Lanjut ke pesanan berikutnya
-//         temp = temp->next;
-//     }
-// }
+        // Lanjut ke pesanan berikutnya
+        temp = temp->next;
+    }
+}
 
 void batalPesan(){
     if (headPesanan == nullptr) {
@@ -444,7 +459,7 @@ int main(){
             case 1: tampilFilm(); break;
             case 2: cariFilm(); break;
             case 3: pesanTiket(); break;
-            // case 4: tampilkanInvoice(); break;
+            case 4: tampilkanInvoice(); break;
             case 5: batalPesan(); break;
             case 6: 
                     cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
