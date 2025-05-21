@@ -31,6 +31,12 @@ struct Pesanan {
     Pesanan* next;
 };
 
+struct Film {
+    string judul;
+    Kursi* headKursi; // setiap film punya kursinya sendiri
+    Film* next;
+};
+
 struct DataPesananFile {
     TiketBioskop data;
     char no_kursi[10]; // cukup buat kursi seperti "A1", "C5"
@@ -286,9 +292,30 @@ void cariFilm(){
     system("cls");
 }
 
-void posisiKursi() {
+void posisiKursi(Film* film){
+    // char baris[] = {'A', 'B', 'C'};
+    // int kolom = 5;
+
+    // for (int i = 0; i < 3; i++) {
+    //     for (int j = 1; j <= kolom; j++) {
+    //         Kursi* baru = new Kursi;
+    //         baru->nomor = string(1, baris[i]) + to_string(j);            
+    //         baru->terisi = false;
+    //         baru->next = nullptr;
+
+    //         if (headKursi == nullptr) {
+    //             headKursi = baru;
+    //         } else {
+    //             Kursi* temp = headKursi;
+    //             while (temp->next != nullptr) temp = temp->next;
+    //             temp->next = baru;
+    //         }
+    //     }
+    // }
     char baris[] = {'A', 'B', 'C'};
     int kolom = 5;
+
+    film->headKursi = nullptr; // inisialisasi head kursi untuk film ini
 
     for (int i = 0; i < 3; i++) {
         for (int j = 1; j <= kolom; j++) {
@@ -297,10 +324,10 @@ void posisiKursi() {
             baru->terisi = false;
             baru->next = nullptr;
 
-            if (headKursi == nullptr) {
-                headKursi = baru;
+            if (film->headKursi == nullptr) {
+                film->headKursi = baru;
             } else {
-                Kursi* temp = headKursi;
+                Kursi* temp = film->headKursi;
                 while (temp->next != nullptr) temp = temp->next;
                 temp->next = baru;
             }
@@ -308,9 +335,22 @@ void posisiKursi() {
     }
 }
 
-void tampilkanKursi() {
-    cout << "\nDaftar Kursi: \n";
-    Kursi* temp = headKursi;
+void tampilkanKursi(Film* film) {
+    // cout << "\nDaftar Kursi: \n";
+    // Kursi* temp = headKursi;
+    // int count = 0;
+    // while (temp != nullptr) {
+    //     if (temp->terisi) {
+    //         cout << "[XX] ";
+    //     } else {
+    //         cout << "[" << temp->nomor << "] ";
+    //     }
+    //     count++;
+    //     if (count % 5 == 0) cout << endl;
+    //     temp = temp->next;
+    // }
+    cout << "\nDaftar Kursi untuk film " << film->judul << ":\n";
+    Kursi* temp = film->headKursi;
     int count = 0;
     while (temp != nullptr) {
         if (temp->terisi) {
@@ -322,15 +362,16 @@ void tampilkanKursi() {
         if (count % 5 == 0) cout << endl;
         temp = temp->next;
     }
+
 }
 
-string pilihKursi() {
+string pilihKursi(Film* film) {
     string input;
-    tampilkanKursi();
+    tampilkanKursi(film);
     cout << "\nPilih nomor kursi yang ingin dipesan: ";
     cin >> input;
 
-    Kursi* temp = headKursi;
+    Kursi* temp = film->headKursi;
     while (temp != nullptr) {
         if (temp->nomor == input) {
             if (!temp->terisi) {
@@ -339,14 +380,14 @@ string pilihKursi() {
                 return input;
             } else {
                 cout << "Kursi sudah terisi, pilih yang lain!\n";
-                return pilihKursi();
+                return pilihKursi(film);
             }
         }
         temp = temp->next;
     }
 
     cout << "Nomor kursi tidak valid!\n";
-    return pilihKursi();
+    return pilihKursi(film);
 }
 
 void tambahPesanan(TiketBioskop tiket) {
@@ -368,7 +409,7 @@ void tambahPesanan(TiketBioskop tiket) {
     }
 
     for (int i = 0; i < jml; i++){
-        string kursi = pilihKursi();
+        string kursi = pilihKursi(film);
         DataPesananFile dp;
         dp.data = tiket;
         strcpy(dp.no_kursi, kursi.c_str());  // perbaikan penyalinan kursi
@@ -590,7 +631,7 @@ void menulogin(){
 int main(){
     system("cls");
     isiDataAwal();
-    posisiKursi();
+    //posisiKursi(film);
     menulogin();
     return 0;
 }
