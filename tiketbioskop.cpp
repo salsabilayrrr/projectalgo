@@ -46,6 +46,7 @@ string usernameAktif;
 TiketBioskop* head = nullptr;
 Kursi* headKursi = nullptr;
 Pesanan* headPesanan = nullptr;
+Film* headFilm = nullptr;
 
 void opsilain() {
     cout << "========================================  " << endl;
@@ -528,7 +529,7 @@ void tampilkanInvoice() {
     system("cls");
 }
 
-void batalPesan(){
+void batalPesan() {
     if (headPesanan == nullptr) {
         cout << "\nBelum ada pesanan untuk dibatalkan.\n";
         return;
@@ -545,7 +546,7 @@ void batalPesan(){
 
     while (temp != nullptr) {
         if (temp->data.id_tiket == id && temp->no_kursi == kursi) {
-            if (temp->data.id_tiket == id && temp->no_kursi == kursi) {
+            // Hapus node pesanan
             if (bantu == nullptr) {
                 headPesanan = temp->next;
             } else {
@@ -562,23 +563,18 @@ void batalPesan(){
                 k = k->next;
             }
 
-            // Hapus node pesanan
-            if (bantu == nullptr) {
-                headPesanan = temp->next;
-            } else {
-                bantu->next = temp->next;
-            }
-
             delete temp;
             cout << "Pesanan berhasil dibatalkan!\n";
+            berhenti();
+            system("cls");
             return;
         }
         bantu = temp;
         temp = temp->next;
     }
-    cout << "Pesanan tidak ditemukan. Pastikan ID Tiket dan No Kursi benar.\n";
-    }
 
+    // Kalau tidak ditemukan
+    cout << "Pesanan tidak ditemukan. Pastikan ID Tiket dan No Kursi benar.\n";
     berhenti();
     system("cls");
 }
