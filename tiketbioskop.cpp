@@ -62,83 +62,27 @@ void berhenti() {
     }
 }
 
-void login() {
-    char username[50], password[50]; // array char untuk menyimpan input user
-
-    cout << setw(48) << setfill('=') << "" << endl;
-    cout << "||" << setw(40) << setfill(' ') << "  Selamat Datang di Pemesanan Tiket Bioskop" << setw(3) << setfill(' ') << "||"<< endl;
-    cout << setw(48) << setfill('=') << "" << endl;
-
-    cout << "\nMasukkan username  = "; 
-    cin >> username;
-    cout << "Masukkan password  = "; 
-    cin >> password;
-
-    FILE* file = fopen("DataUser.dat", "rb");
-    if (!file) {
-        cout << "Data user tidak ditemukan. Silakan daftar terlebih dahulu.\n";
-        return;
-    }
-
-    User userData;
-    bool ditemukan = false;
-
-    while (fread(&userData, sizeof(User), 1, file)) {
-        // Gunakan strcmp untuk bandingkan string C-style
-        if (strcmp(username, userData.username) == 0 && strcmp(password, userData.password) == 0) {
-            ditemukan = true;
-            break;
-        }
-    }
-
-    fclose(file);
-
-    if (ditemukan) {
-        cout << "\n----------Selamat Anda Berhasil Login------------\n";
-        usernameAktif = string(username); // simpan username aktif
-
-        string DataUser = "pesanan_" + usernameAktif + ".dat";
-        FILE* fileCheck = fopen(DataUser.c_str(), "ab"); // buat file pesanan jika belum ada
-        if (!fileCheck) {
-            cout << "Gagal membuat file pesanan.\n";
-            return;
-        }
-        fclose(fileCheck);
-    } else {
-        cout << "\nUsername atau password salah.\n";
-    }
-}
-
-void simpanUserBaru(string username, string password) {
-    FILE* file = fopen("DataUser.dat", "ab");
-    if (!file) {
-        cout << "Gagal membuka file untuk menyimpan data.\n";
-        return;
-    }
-
+void simpanUserKeFile() {
     User newUser;
+    cout << "=== Simpan Username & Password ===\n";
+    cout << "Masukkan username : ";
+    cin >> newUser.username;
+    cout << "Masukkan password : ";
+    cin >> newUser.password;
 
-    // Inisialisasi array kosong
-    for (int i = 0; i < 50; ++i) {
-        newUser.username[i] = '\0';
-        newUser.password[i] = '\0';
-    }
-
-    // Salin karakter satu per satu
-    for (int i = 0; i < username.length() && i < 49; ++i) {
-        newUser.username[i] = username[i];
-    }
-    for (int i = 0; i < password.length() && i < 49; ++i) {
-        newUser.password[i] = password[i];
+    FILE* file = fopen("DataUser.dat", "ab"); // append binary
+    if (!file) {
+        cout << "Gagal membuka file.\n";
+        return;
     }
 
     fwrite(&newUser, sizeof(User), 1, file);
     fclose(file);
 
-    cout << "Akun berhasil didaftarkan.\n";
+    cout << "Data berhasil disimpan ke file.\n";
 }
 
-void menu(int &pilihan){
+void menu(int &pilihanMenu){
         cout << "\n================= Menu =================\n";
         cout << "| 1. Tampilkan Daftar Film             |" << endl;
         cout << "| 2. Cari Film                         |"<< endl;
@@ -148,9 +92,50 @@ void menu(int &pilihan){
         cout << "| 6. Exit                              |"<< endl;
         cout << "========================================" << endl;
         cout << "Pilih Menu[1-6]: ";
-        cin >> pilihan;
+        cin >> pilihanMenu;
         cin.ignore();
 }
+bool login() {
+    string uname, pass;
+
+    cout << "\n=== Login ===\n";
+    cout << "Masukkan username : ";
+    cin >> uname;
+    cout << "Masukkan password : ";
+    cin >> pass;
+
+    FILE* file = fopen("DataUser.dat", "rb");
+    if (!file) {
+        cout << "File data belum ada.\n";
+        return false;
+    }
+
+    User userData;
+    bool ditemukan = false;
+
+    while (fread(&userData, sizeof(User), 1, file)) {
+        string fileUser(userData.username);
+        string filePass(userData.password);
+
+        if (uname == fileUser && pass == filePass) {
+            ditemukan = true;
+            usernameAktif = fileUser;
+            break;
+        }
+    }
+
+    fclose(file);
+    
+    if (ditemukan) {
+        cout << "Login berhasil. Selamat datang, " << uname << "!\n";
+        return true;
+    } else {
+        cout << "Login gagal. Username atau password salah.\n";
+    }
+    return false;
+}
+
+
 
 void isiDataAwal() {
     FILE* file = fopen("DataFilm.dat", "wb"); // overwrite semua
@@ -542,31 +527,73 @@ void batalPesan(){
     }
 }
 
+void menulogin(){
+    int pil;
+    bool berhasilLogin = false;
+    do {
+        cout << "\n=== MENU ===\n";
+        cout << "1. Simpan Username & Password\n";
+        cout << "2. Login\n";
+        cout << "3. Exit\n";
+        cout << "Pilih: ";
+        cin >> pil;
+
+        switch (pil) {
+            case 1:
+                simpanUserKeFile();
+                break;
+            case 2:
+                berhasilLogin=login();
+                if(berhasilLogin){
+                    int pilihanMenu;
+                    
+                    do {
+                        menu(pilihanMenu);
+                        if (pilihanMenu == 1) tampilFilm();
+                        else if (pilihanMenu == 2) cariFilm();
+                        else if (pilihanMenu == 3) pesanTiket();
+                        else if (pilihanMenu == 4) tampilkanInvoice();
+                        else if (pilihanMenu == 5) batalPesan();
+                        else if (pilihanMenu == 6){
+                            cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
+                            cout <<"Selamat Menonton!\n";
+                        }
+                        else cout << "Fitur belum tersedia.\n";
+                    }while (pilihanMenu != 6);
+                } 
+                break;
+            case 3:
+                exit(0);
+                break;
+            default:
+                cout << "Pilihan tidak valid.\n";
+        }
+    } while (true);
+}
+
 int main(){
     system("cls");
     isiDataAwal();
     posisiKursi();
-    int pilihan;
-    login();
+    menulogin();
     
-    do {
-        menu(pilihan);
-        system("cls");
-        switch (pilihan) {
-            case 1: tampilFilm(); break;
-            case 2: cariFilm(); break;
-            case 3: pesanTiket(); break;
-            case 4: tampilkanInvoice(); break;
-            case 5: batalPesan(); break;
-            case 6: 
-                    cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
-                    cout <<"Selamat Menonton!\n";
-                    break;
-            default: 
-                    opsilain();
-                    berhenti();
-        }
-        berhenti();
-    } while (pilihan != 6);
+    // do {
+    //     system("cls");
+    //     switch (pilihan) {
+    //         case 1: tampilFilm(); break;
+    //         case 2: cariFilm(); break;
+    //         case 3: pesanTiket(); break;
+    //         case 4: tampilkanInvoice(); break;
+    //         case 5: batalPesan(); break;
+    //         case 6: 
+    //                 cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
+    //                 cout <<"Selamat Menonton!\n";
+    //                 break;
+    //         default: 
+    //                 opsilain();
+    //                 berhenti();
+    //     }
+    //     berhenti();
+    // } while (pilihan != 6);
     return 0;
 }
