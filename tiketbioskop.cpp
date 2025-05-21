@@ -216,6 +216,9 @@ void tampilFilm() {
         cout << "Durasi       : " << film[i].durasi << endl;
         cout << "----------------------------------------" << endl;
     }
+
+    berhenti();
+    system("cls");
 }
 
 int binarySearch(TiketBioskop arr[], int left, int right, const char namafilm[]) {
@@ -278,6 +281,9 @@ void cariFilm(){
     } else {
         cout << "Film dengan judul " << filmCari << " tidak ditemukan!\n";
     }
+
+    berhenti();
+    system("cls");
 }
 
 void posisiKursi() {
@@ -414,6 +420,9 @@ void pesanTiket() {
     } else {
         cout << "Pilihan tidak valid.\n";
     }
+
+    berhenti();
+    system("cls");
 }
 
 void tampilkanInvoice() {
@@ -473,6 +482,9 @@ void tampilkanInvoice() {
 
         temp = temp->next;
     }
+
+    berhenti();
+    system("cls");
 }
 
 void batalPesan(){
@@ -525,18 +537,23 @@ void batalPesan(){
     }
     cout << "Pesanan tidak ditemukan. Pastikan ID Tiket dan No Kursi benar.\n";
     }
+
+    berhenti();
+    system("cls");
 }
 
 void menulogin(){
     int pil;
     bool berhasilLogin = false;
     do {
-        cout << "\n=== MENU ===\n";
-        cout << "1. Simpan Username & Password\n";
-        cout << "2. Login\n";
-        cout << "3. Exit\n";
-        cout << "Pilih: ";
+        cout << "\n================= Menu =================\n";
+        cout << "| 1. Registrasi                        |" << endl;
+        cout << "| 2. Login                             |"<< endl;
+        cout << "| 3. Exit                              |"<< endl;
+        cout << "========================================" << endl;
+        cout << "Pilih Menu[1-3]: ";
         cin >> pil;
+        system("cls");
 
         switch (pil) {
             case 1:
@@ -546,7 +563,6 @@ void menulogin(){
                 berhasilLogin=login();
                 if(berhasilLogin){
                     int pilihanMenu;
-                    
                     do {
                         menu(pilihanMenu);
                         if (pilihanMenu == 1) tampilFilm();
@@ -558,7 +574,7 @@ void menulogin(){
                             cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
                             cout <<"Selamat Menonton!\n";
                         }
-                        else cout << "Fitur belum tersedia.\n";
+                        else opsilain();
                     }while (pilihanMenu != 6);
                 } 
                 break;
@@ -576,24 +592,5 @@ int main(){
     isiDataAwal();
     posisiKursi();
     menulogin();
-    
-    // do {
-    //     system("cls");
-    //     switch (pilihan) {
-    //         case 1: tampilFilm(); break;
-    //         case 2: cariFilm(); break;
-    //         case 3: pesanTiket(); break;
-    //         case 4: tampilkanInvoice(); break;
-    //         case 5: batalPesan(); break;
-    //         case 6: 
-    //                 cout << "\nTerima kasih telah menggunakan Layanan Kami! \n";
-    //                 cout <<"Selamat Menonton!\n";
-    //                 break;
-    //         default: 
-    //                 opsilain();
-    //                 berhenti();
-    //     }
-    //     berhenti();
-    // } while (pilihan != 6);
     return 0;
 }
