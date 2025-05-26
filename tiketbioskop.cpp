@@ -70,8 +70,8 @@ void berhenti() {
 
 void simpanUserKeFile() {
     User newUser;
-    cout << "=== Simpan Username & Password ===\n";
-    cout << "Masukkan username : ";
+    cout << "============== Membuat Akun ==============\n";
+    cout << "\nMasukkan username : ";
     cin >> newUser.username;
     cout << "Masukkan password : ";
     cin >> newUser.password;
@@ -85,7 +85,7 @@ void simpanUserKeFile() {
     fwrite(&newUser, sizeof(User), 1, file);
     fclose(file);
 
-    cout << "Data berhasil disimpan ke file.\n";
+    cout << "\n====== Selamat! Berhasil Membuat Akun======\n";
 }
 
 void menu(int &pilihanMenu){
@@ -104,8 +104,8 @@ void menu(int &pilihanMenu){
 bool login() {
     string uname, pass;
 
-    cout << "\n=== Login ===\n";
-    cout << "Masukkan username : ";
+    cout << "\n================ Login ================\n";
+    cout << "\nMasukkan username : ";
     cin >> uname;
     cout << "Masukkan password : ";
     cin >> pass;
@@ -133,7 +133,7 @@ bool login() {
     fclose(file);
     
     if (ditemukan) {
-        cout << "Login berhasil. Selamat datang, " << uname << "!\n";
+        cout << "\nLogin berhasil.\n" << "Selamat datang, " << uname << "!\n";
         return true;
     } else {
         cout << "Login gagal. Username atau password salah.\n";
