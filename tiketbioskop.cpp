@@ -390,7 +390,7 @@ string pilihKursi(Film* film) {
     return pilihKursi(film);
 }
 
-void tambahPesanan(TiketBioskop tiket) {
+void tambahPesanan(TiketBioskop tiket, Film* film) {
     if (usernameAktif.empty()) {
         cout << "Anda harus login dulu sebelum pesan tiket.\n";
         return;
