@@ -225,8 +225,6 @@ void tampilFilm() {
         cout << "----------------------------------------" << endl;
     }
 
-    berhenti();
-    system("cls");
 }
 
 int binarySearch(TiketBioskop arr[], int left, int right, const char namafilm[]) {
@@ -392,6 +390,7 @@ string pilihKursi(Film* film) {
     return pilihKursi(film);
 }
 
+
 void tambahPesanan(TiketBioskop tiket, Film* film) {
     if (usernameAktif.empty()) {
         cout << "Anda harus login dulu sebelum pesan tiket.\n";
@@ -450,6 +449,7 @@ void pesanTiket() {
     fclose(file);
 
     cout << "\nDaftar Film:\n";
+    tampilFilm();
     for (int i = 0; i < jmlfilm; i++) {
         daftarFilm[i].judul = tiket[i] . namafilm;
         posisiKursi(&daftarFilm[i]);
@@ -457,7 +457,7 @@ void pesanTiket() {
     }
 
     int pilih;
-    cout << "Pilih film (1-" << jmlfilm << "): ";
+    cout << "Pilih film (001-" << "00" << jmlfilm << "): ";
     cin >> pilih;
 
     if (pilih >= 1 && pilih <= jmlfilm) {
