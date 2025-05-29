@@ -46,6 +46,8 @@ string usernameAktif;
 TiketBioskop* head = nullptr;
 Kursi* headKursi = nullptr;
 Pesanan* headPesanan = nullptr;
+Film daftarFilm[100];
+TiketBioskop tiket[100];
 
 void opsilain() {
     cout << "========================================  " << endl;
@@ -449,7 +451,9 @@ void pesanTiket() {
 
     cout << "\nDaftar Film:\n";
     for (int i = 0; i < jmlfilm; i++) {
-        cout << i + 1 << ". " << film[i].namafilm << endl;
+        daftarFilm[i].judul = tiket[i] . namafilm;
+        posisiKursi(&daftarFilm[i]);
+        //cout << i + 1 << ". " << film[i].namafilm << endl;
     }
 
     int pilih;
@@ -457,7 +461,7 @@ void pesanTiket() {
     cin >> pilih;
 
     if (pilih >= 1 && pilih <= jmlfilm) {
-        tambahPesanan(film[pilih - 1]);
+        tambahPesanan(film[pilih - 1], &daftarFilm[pilih - 1]);
     } else {
         cout << "Pilihan tidak valid.\n";
     }
