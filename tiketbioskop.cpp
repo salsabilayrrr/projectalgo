@@ -302,7 +302,7 @@ void posisiKursi(Film* film){
         for (int j = 1; j <= kolom; j++) {
             Kursi* baru = new Kursi;
             baru->nomor = string(1, baris[i]) + to_string(j);            
-            baru->terisi = false;
+            baru->terisi = false; // kursi yang belum dipesan
             baru->next = nullptr;
 
             if (film->headKursi == nullptr) {
@@ -357,6 +357,7 @@ string pilihKursi(Film* film) {
 
         while (temp != nullptr) {
             if (temp->nomor == input) {
+                found = true;
                 if (!temp->terisi) {
                     temp->terisi = true;
                     cout << "Kursi " << input << " berhasil dipesan.\n";
@@ -371,24 +372,18 @@ string pilihKursi(Film* film) {
         
         if (!found) {
             cout << "Nomor kursi tidak valid!\n";
-            return pilihKursi(film);
+            return pilihKursi(film); //ulangi proses pemilihan
         }
     }
 }
 
 
-void tambahPesanan(TiketBioskop tiket, Film* film) {
-    if (usernameAktif.empty()) {
-        cout << "Anda harus login dulu sebelum pesan tiket.\n";
-        return;
-    }    
-    
+void tambahPesanan(TiketBioskop tiket, Film* film) { 
     int jml;
     cout << "Berapa tiket yang ingin dipesan? ";
     cin >> jml;
 
     string namaFile = "pesanan_" + usernameAktif + ".dat";
-
     FILE* file = fopen("DataPesanan.dat", "ab");
     if (!file) {
         cout << "Gagal membuka file.\n";
@@ -399,9 +394,9 @@ void tambahPesanan(TiketBioskop tiket, Film* film) {
         string kursi = pilihKursi(film);
         DataPesananFile dp;
         dp.data = tiket;
-        strcpy(dp.no_kursi, kursi.c_str());  // perbaikan penyalinan kursi
-
+        strcpy(dp.no_kursi, kursi.c_str()); 
         fwrite(&dp, sizeof(DataPesananFile), 1, file);
+
         Pesanan* baru = new Pesanan;
         baru->data = tiket;
         baru->no_kursi = kursi;
@@ -444,9 +439,6 @@ void pesanTiket() {
 
     cout << "\nDaftar Film:\n";
     tampilFilm();
-    for (int i = 0; i < jmlfilm; i++) {
-        daftarFilm[i].judul = tiket[i] . namafilm;
-    }
 
     int pilih;
     cout << "Pilih film (001-" << "00" << jmlfilm << "): ";
@@ -463,11 +455,6 @@ void pesanTiket() {
 }
 
 void tampilkanInvoice() {
-    if (usernameAktif.empty()) {
-        cout << "Anda belum login.\n";
-        return;
-    }
-
     if (headPesanan == nullptr) {
         // Load dari file pesanan_[username].dat
         string namaFile = "pesanan_" + usernameAktif + ".dat";
